@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://api/animals";
+const API_BASE_URL = "/api/animals";
 
 // get a list if animals
 export const fetchAnimalsApi = async () => {

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchAnimalsApi, fetchAnimalDetailsApi } from "../../api/animalsApi";
+import {fetchAnimalsApi, fetchAnimalDetailsApi, addAnimalApi} from "../api/animalsApi";
 
 export const fetchAnimals = createAsyncThunk(
     "animals/fetchAnimals",
@@ -14,6 +14,14 @@ export const fetchAnimalDetails = createAsyncThunk(
     async (id) => {
         const animal = await fetchAnimalDetailsApi(id);
         return animal;
+    }
+);
+
+export const addAnimal = createAsyncThunk(
+    "animals/addAnimal",
+    async (animal) => {
+        const newAnimal = await addAnimalApi(animal);
+        return newAnimal;
     }
 );
 
@@ -53,6 +61,18 @@ const animalsSlice = createSlice({
                 state.selectedAnimal = action.payload;
             })
             .addCase(fetchAnimalDetails.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            });
+        builder
+            .addCase(addAnimal.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(addAnimal.fulfilled, (state, action) => {
+                state.loading = false;
+                state.animals.push(action.payload);
+            })
+            .addCase(addAnimal.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
             });
