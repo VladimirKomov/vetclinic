@@ -1,103 +1,129 @@
-# **Technical Test: Development of a Veterinary Interface**
- 
-## **Context**
- 
-A veterinary clinic needs a simple web application to:  
-- Record events for each animal (visits, treatments, observations, etc.).  
-- Generate a detailed Excel report for each animal listing all associated events.  
- 
----
- 
-## **Expected Deliverables**
- 
-- A user interface developed with **Vue.js**.  
-- A backend API developed with **Node.js** and **Express**.  
-- A relational database (**PostgreSQL** or **MySQL**).  
-- A feature to export an animal’s data into an Excel file.  
- 
----
- 
-## **Functional Specifications**
- 
-### **Main Page**  
-- List of animals (name, species, age).  
-- Ability to add a new animal (name, species, date of birth).  
- 
-### **Animal Details**  
-- A section to display all events related to an animal.  
-- A form to add a new event:  
-  - **Event Type**: Visit, Treatment, Observation (dropdown menu).  
-  - **Description** (text input).  
-  - **Date** (date picker).  
- 
-### **Export**  
-- A button to download an Excel report of the events for a specific animal.  
- 
----
- 
-## **Technical Constraints**
- 
-### **Frontend**  
-- Use **Vue.js 3** (or **Vue 2** if specified).  
-- State management with **Pinia** or **Vuex**.  
-- Communication with the backend via REST API calls.  
- 
-### **Backend**  
-- Use **Node.js** with **Express**.  
-- Set up a relational database with the following tables:  
-  - `animals` (id, name, species, birth_date).  
-  - `events` (id, animal_id, type, description, event_date).  
-- Provide the following REST endpoints:  
-  - `GET /animals`: Lists all animals.  
-  - `POST /animals`: Adds a new animal.  
-  - `GET /animals/:id`: Fetches details of an animal along with its events.  
-  - `POST /animals/:id/events`: Adds an event for an animal.  
-  - `GET /animals/:id/export`: Generates an Excel file for an animal.  
- 
-### **Excel Export**  
-- Use a library like **exceljs** or **xlsx** on the backend.  
- 
----
- 
-## **Evaluation Criteria**
- 
-### **Clean and Readable Code**  
-- Well-structured project.  
-- Use of best practices (**ESLint**, layer separation, etc.).  
- 
-### **Compliance with Specifications**  
-- Complete and functional CRUD features.  
-- Operational Excel export.  
- 
-### **Time Management**  
-- **Estimated time for the test**: 6 hours.  
- 
----
- 
-## **Example Tasks to Guide the Candidate**
- 
-### **Initialization**  
-- Set up a Vue.js and Node.js project.  
-- Configure a relational database.  
- 
-### **Frontend**  
-- Create a homepage displaying the list of animals.  
-- Create a form to add animals and events.  
- 
-### **Backend**  
-- Implement the REST endpoints.  
-- Develop the Excel export functionality.  
- 
----
- 
-## **Instructions for the Candidate**
- 
-- Use a **Bitbucket repository** to store the code.  
-- Add a **README file** explaining:  
-  - How to install and run the project.  
-  - Technical choices made.  
-  - Any known limitations.  
- 
----
- 
-**Good luck! 🚀**
+# Veterinary Clinic Web Application
+
+This project is a web application designed for veterinary clinics to manage animals and their related events (visits, treatments, observations). It also provides functionality to export animal events to an Excel file for reporting purposes.
+
+## Features
+
+### Main Features
+- **Animals Management:**
+  - View a list of animals with their name, species, and age.
+  - Add new animals (name, species, and birth date).
+- **Animal Details:**
+  - View details of a specific animal and its related events.
+  - Add events (visit, treatment, observation) for an animal.
+  - Export events of an animal to an Excel file.
+
+### Technologies Used
+- **Frontend:**
+  - React with Vite for fast development. (The project originally required Vue.js, 
+  which I'm still learning, but I'll adapt quickly and learn if necessary)
+  - Redux Toolkit for state management.
+  - Axios for API requests.
+  - CSS Modules for styling.
+- **Backend:**
+  - Node.js with Express for building the REST API.
+  - PostgreSQL database (hosted on Neon).
+  - Knex.js for database migrations and queries.
+- **Miscellaneous:**
+  - `xlsx` library for Excel file creation.
+
+## Installation
+
+### Prerequisites
+Ensure you have the following installed:
+- Node.js (>=16.x)
+- PostgreSQL database
+
+### Setup
+
+1. **Clone the Repository:**
+   ```bash
+   git clone <repository-url>
+   cd <repository-directory>
+   ```
+
+2. **Backend Setup:**
+   ```bash
+   cd backend
+   npm install
+   ```
+
+   Create a `.env` file in the `backend` directory with the following variables:
+   ```env
+   PGHOST=<your-database-host>
+   PGDATABASE=<your-database-name>
+   PGUSER=<your-database-username>
+   PGPASSWORD=<your-database-password>
+   PGPORT=<your-database-port>
+   ```
+
+   Run database migrations:
+   ```bash
+   npx knex migrate:latest
+   ```
+
+   Start the backend server:
+   ```bash
+   npm start
+   ```
+   The backend server will run on `http://localhost:5000`.
+
+3. **Frontend Setup:**
+   ```bash
+   cd frontend
+   npm install
+   ```
+
+   Start the frontend server:
+   ```bash
+   npm run dev
+   ```
+   The frontend server will run on `http://localhost:5173`.
+
+## API Endpoints
+
+### Animals
+- **GET /animals:** Get a list of all animals.
+- **POST /animals:** Add a new animal.
+- **GET /animals/:id:** Get details of a specific animal, including its events.
+- **POST /animals/:id/events:** Add a new event for an animal.
+- **GET /animals/:id/export:** Export events of an animal to an Excel file.
+
+## Project Structure
+
+### Backend
+- **`/backend/src`**
+  - `controllers`: Contains the business logic for API endpoints.
+  - `routes`: Defines API routes.
+  - `db`: Knex.js configuration and migrations.
+
+### Frontend
+- **`/frontend/src`**
+  - `components`: Reusable UI components like `AnimalCard`, `AddAnimalModal`, `AnimalEvents`.
+  - `pages`: Main pages like `Home` and `AnimalDetails`.
+  - `redux`: Redux slices and store configuration.
+  - `api`: API request logic.
+
+## Usage
+
+1. **View Animals:**
+  - Navigate to the homepage to see a list of all animals.
+2. **Add an Animal:**
+  - Click the "Add Animal" button to open a modal for adding a new animal.
+3. **View Animal Details:**
+  - Click on an animal in the list to view its details and associated events.
+4. **Add an Event:**
+  - On the animal details page, click "Add Event" to open a modal for adding an event.
+5. **Export Events:**
+  - On the animal details page, click "Export Events" to download a report in Excel format.
+
+## Known Issues
+- Ensure the backend server is running before starting the frontend.
+- If the database connection fails, check `.env` configuration in the backend.
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+## License
+This project is licensed under the MIT License.
+
