@@ -7,7 +7,7 @@ const getAnimalWithEvents = async (id) => {
         // get animal
         const animal = await trx("animals").where({id}).first();
         if (!animal) {
-            throw new Error("Животное не найдено");
+            throw new Error("Animal not found");
         }
 
         // get events for animals
@@ -51,10 +51,10 @@ export const getAnimalById = async (req, res) => {
         const {animal, events} = await getAnimalWithEvents(id);
         res.json({...animal, events});
     } catch (err) {
-        if (err.message === "Животное не найдено") {
+        if (err.message === "Animal not found") {
             res.status(404).json({error: err.message});
         } else {
-            res.status(500).json({error: "Ошибка при получении данных"});
+            res.status(500).json({error: "Failed to get animal with events"});
         }
     }
 };
