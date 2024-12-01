@@ -1,12 +1,16 @@
-.container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.animalList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    padding: 0;
+    list-style: none;
+    margin-top: 20px;
+}
+
+.link {
+    width: 100%;
+    max-width: 500px;
 }
 
 .title {

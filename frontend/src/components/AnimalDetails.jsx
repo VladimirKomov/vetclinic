@@ -1,32 +1,39 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAnimalDetails, clearSelectedAnimal } from "../redux/animalsSlice";
-import { addAnimalEvent } from "../redux/eventsSlice";
+import {fetchAnimalDetails, clearSelectedAnimal, addAnimalEvent} from "../redux/animalsSlice";
+import AnimalEvents from "../components/AnimalEvents";
+import AddEventModal from "../components/AddEventModal";
+import styles from "./AnimalDetails.module.css";
 
 const AnimalDetails = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { selectedAnimal, loading, error } = useSelector((state) => state.animals);
-
-    const [eventForm, setEventForm] = useState({
-        type: "",
-        description: "",
-        event_date: "",
-    });
+    const [isModalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
         dispatch(fetchAnimalDetails(id));
+
         return () => {
             dispatch(clearSelectedAnimal());
         };
     }, [dispatch, id]);
 
-    const handleEventSubmit = (e) => {
-        e.preventDefault();
-        dispatch(addAnimalEvent({ id, event: eventForm }));
-        setEventForm({ type: "", description: "", event_date: "" });
+    const handleAddEvent = (eventData) => {
+        dispatch(addAnimalEvent({ id: selectedAnimal.id, event: eventData }))
+            .unwrap()
+            .then((newEvent) => {
+                console.log("Event successfully added:", newEvent);
+            })
+            .catch((error) => {
+                console.error("Failed to add event:", error);
+            });
+    };
+
+    const handleExport = () => {
+        window.open(`/api/animals/${id}/export`, "_blank");
     };
 
     if (loading) return <p>Loading...</p>;
@@ -34,53 +41,34 @@ const AnimalDetails = () => {
     if (!selectedAnimal) return <p>No animal found.</p>;
 
     return (
-        <div>
+        <div className={styles.container}>
             <h1>{selectedAnimal.name} - {selectedAnimal.species}</h1>
-            <h2>Events</h2>
-            <ul>
-                {selectedAnimal.events.map((event) => (
-                    <li key={event.id}>
-                        {event.type} - {event.description} ({event.event_date})
-                    </li>
-                ))}
-            </ul>
+            <p><strong>Birth Date:</strong> {selectedAnimal.birth_date}</p>
 
-            <h3>Add Event</h3>
-            <form onSubmit={handleEventSubmit}>
-                <label>
-                    Type:
-                    <select
-                        value={eventForm.type}
-                        onChange={(e) => setEventForm({ ...eventForm, type: e.target.value })}
-                    >
-                        <option value="Visit">Visit</option>
-                        <option value="Treatment">Treatment</option>
-                        <option value="Observation">Observation</option>
-                    </select>
-                </label>
-                <label>
-                    Description:
-                    <input
-                        type="text"
-                        value={eventForm.description}
-                        onChange={(e) => setEventForm({ ...eventForm, description: e.target.value })}
-                    />
-                </label>
-                <label>
-                    Date:
-                    <input
-                        type="date"
-                        value={eventForm.event_date}
-                        onChange={(e) => setEventForm({ ...eventForm, event_date: e.target.value })}
-                    />
-                </label>
-                <button type="submit">Add Event</button>
-            </form>
-
-            <button onClick={() => navigate(`/animals/${id}/export`)}>
-                Export Events to Excel
+            <button
+                className={styles.addButton}
+                onClick={() => setModalOpen(true)}
+            >
+                Add Event
             </button>
-            <button onClick={() => navigate("/")}>Back to Home</button>
+
+            <button
+                className={styles.exportButton}
+                onClick={handleExport}
+            >
+                Export Events
+            </button>
+
+            <h2>Events</h2>
+
+            <AnimalEvents events={selectedAnimal.events}/>
+
+            <AddEventModal
+                isOpen={isModalOpen}
+                onClose={() => setModalOpen(false)}
+                onAddEvent={handleAddEvent}
+            />
+
         </div>
     );
 };

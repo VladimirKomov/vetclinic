@@ -31,8 +31,12 @@ export const getAllAnimals = async (req, res) => {
 export const addAnimal = async (req, res) => {
     const {name, species, birth_date} = req.body;
     try {
-        const [id] = await db("animals").insert({name, species, birth_date}).returning("id");
-        res.status(201).json({id, message: "Animal added successfully"});
+        // return new data to display in the list on the frontend,
+        // can re-request the list of all animals, but there are no filters
+        const [animal] = await db("animals")
+            .insert({name, species, birth_date})
+            .returning(["id", "name", "species", "birth_date"]);
+        res.status(201).json(animal);
     } catch (err) {
         res.status(500).json({error: "Did not add animal"});
     }

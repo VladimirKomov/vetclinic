@@ -1,12 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import animalsReducer from "./animalsSlice";
-import eventsReducer from "./eventsSlice";
+import logger from "redux-logger";
 
 const store = configureStore({
     reducer: {
         animals: animalsReducer,
-        events: eventsReducer,
     },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(logger),
 });
 
 export default store;

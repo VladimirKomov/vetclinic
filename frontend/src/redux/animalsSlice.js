@@ -1,5 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import {fetchAnimalsApi, fetchAnimalDetailsApi, addAnimalApi} from "../api/animalsApi";
+import {
+    fetchAnimalsApi,
+    fetchAnimalDetailsApi,
+    addAnimalApi,
+    addAnimalEventApi,
+} from "../api/animalsApi";
 
 export const fetchAnimals = createAsyncThunk(
     "animals/fetchAnimals",
@@ -22,6 +27,14 @@ export const addAnimal = createAsyncThunk(
     async (animal) => {
         const newAnimal = await addAnimalApi(animal);
         return newAnimal;
+    }
+);
+
+export const addAnimalEvent = createAsyncThunk(
+    "animals/addAnimalEvent",
+    async ({ id, event }) => {
+        const newEvent = await addAnimalEventApi(id, event);
+        return { id, event: newEvent };
     }
 );
 
@@ -64,6 +77,7 @@ const animalsSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message;
             });
+
         builder
             .addCase(addAnimal.pending, (state) => {
                 state.loading = true;
@@ -73,6 +87,21 @@ const animalsSlice = createSlice({
                 state.animals.push(action.payload);
             })
             .addCase(addAnimal.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            });
+
+        builder
+            .addCase(addAnimalEvent.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(addAnimalEvent.fulfilled, (state, action) => {
+                state.loading = false;
+                if (state.selectedAnimal && state.selectedAnimal.id === action.payload.id) {
+                    state.selectedAnimal.events.push(action.payload.event);
+                }
+            })
+            .addCase(addAnimalEvent.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
             });

@@ -1,0 +1,13 @@
+.eventList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.eventItem {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}

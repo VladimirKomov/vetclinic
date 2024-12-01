@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAnimals, addAnimal } from "../redux/animalsSlice";
+import { Link } from "react-router-dom";
 import AnimalCard from "../components/AnimalCard";
 import AddAnimalModal from "../components/AddAnimalModal";
 import styles from "./Home.module.css";
@@ -32,12 +33,19 @@ const Home = () => {
 
             <div className={styles.animalList}>
                 {animals.map((animal) => (
-                    <AnimalCard
+                    <Link
+                        to={`/animals/${animal.id}`}
                         key={animal.id}
-                        name={animal.name}
-                        species={animal.species}
-                        age={calculateAge(animal.birth_date)}
-                    />
+                        className={styles.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >
+                        <AnimalCard
+                            name={animal.name}
+                            species={animal.species}
+                            age={calculateAge(animal.birth_date)}
+                        />
+                    </Link>
                 ))}
             </div>
 
@@ -50,7 +58,6 @@ const Home = () => {
     );
 };
 
-// Helper function to calculate age
 const calculateAge = (birthDate) => {
     const ageDifMs = Date.now() - new Date(birthDate).getTime();
     const ageDate = new Date(ageDifMs);
