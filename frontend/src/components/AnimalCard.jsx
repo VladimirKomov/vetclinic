@@ -5,14 +5,14 @@ const AnimalCard = ({ name, species, age }) => {
     return (
         <div className={styles.card}>
             <div className={styles.header}>
-                <h3 className={styles.name}>{name}</h3>
+                <h3 className={styles.name}>{name}</h3> {/* Animal's name */}
             </div>
             <div className={styles.content}>
                 <p className={styles.species}>
-                    <strong>Species:</strong> {species}
+                    <strong>Species:</strong> {species} {/* Animal's species */}
                 </p>
                 <p className={styles.age}>
-                    <strong>Age:</strong> {age} years old
+                    <strong>Age:</strong> {age} years old {/* Animal's age */}
                 </p>
             </div>
         </div>
@@ -20,4 +20,3 @@ const AnimalCard = ({ name, species, age }) => {
 };
 
 export default AnimalCard;
-

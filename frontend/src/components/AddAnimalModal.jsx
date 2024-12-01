@@ -3,26 +3,30 @@ import ReactDOM from "react-dom";
 import styles from "./AddAnimalModal.module.css";
 
 const AddAnimalModal = ({ isOpen, onClose, onAddAnimal }) => {
+    // State to manage form data for adding a new animal
     const [form, setForm] = useState({
         name: "",
         species: "",
         birth_date: "",
     });
 
+    // Handle form submission
     const handleSubmit = (e) => {
-        e.preventDefault();
-        onAddAnimal(form);
-        setForm({ name: "", species: "", birth_date: "" });
-        onClose();
+        e.preventDefault(); // Prevent default form submission behavior
+        onAddAnimal(form); // Pass form data to the parent component
+        setForm({ name: "", species: "", birth_date: "" }); // Reset form fields
+        onClose(); // Close the modal
     };
 
+    // If the modal is not open, render nothing
     if (!isOpen) return null;
 
+    // Render the modal content
     return ReactDOM.createPortal(
         <div className={styles.modalBackdrop}>
             <div className={styles.modalContent}>
                 <button className={styles.closeButton} onClick={onClose}>
-                    &times;
+                    &times; {/* Close button */}
                 </button>
                 <h2>Add a New Animal</h2>
                 <form onSubmit={handleSubmit} className={styles.form}>
@@ -56,7 +60,7 @@ const AddAnimalModal = ({ isOpen, onClose, onAddAnimal }) => {
                 </form>
             </div>
         </div>,
-        document.body
+        document.body // Render modal as a child of the document body
     );
 };
 

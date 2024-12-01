@@ -6,6 +6,7 @@ const store = configureStore({
     reducer: {
         animals: animalsReducer,
     },
+    // loger for slice
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(logger),
 });

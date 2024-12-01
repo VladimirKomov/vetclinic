@@ -7,9 +7,12 @@ import store from "./redux/store";
 
 function App() {
     return (
+        // redux store
         <Provider store={store}>
+            {/*react router*/}
             <Router>
                 <Routes>
+                    {/*paths are relative to the root of the application*/}
                     <Route path="/" element={<Home />} />
                     <Route path="/animals/:id" element={<AnimalDetails />} />
                 </Routes>

@@ -1,59 +1,64 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {fetchAnimalDetails, clearSelectedAnimal, addAnimalEvent} from "../redux/animalsSlice";
+import { fetchAnimalDetails, clearSelectedAnimal, addAnimalEvent } from "../redux/animalsSlice";
 import AnimalEvents from "../components/AnimalEvents";
 import AddEventModal from "../components/AddEventModal";
 import styles from "./AnimalDetails.module.css";
-import {exportAnimalEventsApi} from "../api/animalsApi.js";
+import { exportAnimalEventsApi } from "../api/animalsApi.js";
 
 const AnimalDetails = () => {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const { selectedAnimal, loading, error } = useSelector((state) => state.animals);
-    const [isModalOpen, setModalOpen] = useState(false);
+    const { id } = useParams(); // Get the animal ID from the URL
+    const navigate = useNavigate(); // For navigation
+    const dispatch = useDispatch(); // Redux dispatch
+    const { selectedAnimal, loading, error } = useSelector((state) => state.animals); // State selectors
+    const [isModalOpen, setModalOpen] = useState(false); // State for the modal
 
     useEffect(() => {
+        // Fetch animal details when component mounts
         dispatch(fetchAnimalDetails(id));
 
+        // Clear selected animal when component unmounts
         return () => {
             dispatch(clearSelectedAnimal());
         };
     }, [dispatch, id]);
 
+    // Handle adding a new event
     const handleAddEvent = (eventData) => {
         dispatch(addAnimalEvent({ id: selectedAnimal.id, event: eventData }))
             .unwrap()
             .then((newEvent) => {
-                console.log("Event successfully added:", newEvent);
+                console.log("Event successfully added:", newEvent); // Log success
             })
             .catch((error) => {
-                console.error("Failed to add event:", error);
+                console.error("Failed to add event:", error); // Log failure
             });
     };
 
+    // Handle exporting events as an Excel file
     const handleExport = async () => {
         try {
             const fileData = await exportAnimalEventsApi(selectedAnimal.id);
 
-            // Creating a temporary URL for uploading a file
+            // Create a temporary URL for the file
             const url = window.URL.createObjectURL(new Blob([fileData]));
             const link = document.createElement("a");
             link.href = url;
 
-            // Setting the file name for the download
+            // Set the file name for download
             link.setAttribute("download", `animal_${selectedAnimal.id}_events.xlsx`);
 
-            // Add link for DOM
+            // Trigger the download and clean up
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         } catch (error) {
-            console.error("Error exporting events:", error);
+            console.error("Error exporting events:", error); // Log error
         }
     };
 
+    // Render loading, error, or no animal found states
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
     if (!selectedAnimal) return <p>No animal found.</p>;
@@ -63,6 +68,7 @@ const AnimalDetails = () => {
             <h1>{selectedAnimal.name} - {selectedAnimal.species}</h1>
             <p><strong>Birth Date:</strong> {selectedAnimal.birth_date}</p>
 
+            {/* Button to open the modal for adding an event */}
             <button
                 className={styles.addButton}
                 onClick={() => setModalOpen(true)}
@@ -70,6 +76,7 @@ const AnimalDetails = () => {
                 Add Event
             </button>
 
+            {/* Button to export events */}
             <button
                 className={styles.exportButton}
                 onClick={handleExport}
@@ -79,14 +86,15 @@ const AnimalDetails = () => {
 
             <h2>Events</h2>
 
-            <AnimalEvents events={selectedAnimal.events}/>
+            {/* Display the list of events */}
+            <AnimalEvents events={selectedAnimal.events} />
 
+            {/* Modal for adding a new event */}
             <AddEventModal
                 isOpen={isModalOpen}
                 onClose={() => setModalOpen(false)}
                 onAddEvent={handleAddEvent}
             />
-
         </div>
     );
 };
