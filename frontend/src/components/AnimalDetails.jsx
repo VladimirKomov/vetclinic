@@ -5,7 +5,8 @@ import { fetchAnimalDetails, clearSelectedAnimal, addAnimalEvent } from "../redu
 import AnimalEvents from "../components/AnimalEvents";
 import AddEventModal from "../components/AddEventModal";
 import styles from "./AnimalDetails.module.css";
-import { exportAnimalEventsApi } from "../api/animalsApi.js";
+import { exportAnimalEventsApi } from "../api/animalsApi";
+import { format } from "date-fns";
 
 const AnimalDetails = () => {
     const { id } = useParams(); // Get the animal ID from the URL
@@ -58,6 +59,11 @@ const AnimalDetails = () => {
         }
     };
 
+    // Readable date format
+    const formatDate = (dateString) => {
+        return format(new Date(dateString), "MMMM d, yyyy");
+    };
+
     // Render loading, error, or no animal found states
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
@@ -66,7 +72,7 @@ const AnimalDetails = () => {
     return (
         <div className={styles.container}>
             <h1>{selectedAnimal.name} - {selectedAnimal.species}</h1>
-            <p><strong>Birth Date:</strong> {selectedAnimal.birth_date}</p>
+            <p><strong>Birth Date:</strong> {formatDate(selectedAnimal.birth_date)}</p>
 
             {/* Button to open the modal for adding an event */}
             <button
