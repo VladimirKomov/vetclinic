@@ -69,10 +69,10 @@ export const addEvent = async (req, res) => {
         if (!animal) {
             return res.status(404).json({error: "Animal not found"});
         }
-        const [eventId] = await db("events")
-            .insert({animal_id: id, type, description, event_date})
-            .returning("id");
-        res.status(201).json({eventId, message: "Event added successfully"});
+        const [newEvent] = await db("events")
+            .insert({ animal_id: id, type, description, event_date })
+            .returning("*");
+        res.status(201).json(newEvent);
     } catch (err) {
         res.status(500).json({error: "Did not add event"});
     }

@@ -5,6 +5,7 @@ import {fetchAnimalDetails, clearSelectedAnimal, addAnimalEvent} from "../redux/
 import AnimalEvents from "../components/AnimalEvents";
 import AddEventModal from "../components/AddEventModal";
 import styles from "./AnimalDetails.module.css";
+import {exportAnimalEventsApi} from "../api/animalsApi.js";
 
 const AnimalDetails = () => {
     const { id } = useParams();
@@ -32,8 +33,25 @@ const AnimalDetails = () => {
             });
     };
 
-    const handleExport = () => {
-        window.open(`/api/animals/${id}/export`, "_blank");
+    const handleExport = async () => {
+        try {
+            const fileData = await exportAnimalEventsApi(selectedAnimal.id);
+
+            // Creating a temporary URL for uploading a file
+            const url = window.URL.createObjectURL(new Blob([fileData]));
+            const link = document.createElement("a");
+            link.href = url;
+
+            // Setting the file name for the download
+            link.setAttribute("download", `animal_${selectedAnimal.id}_events.xlsx`);
+
+            // Add link for DOM
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (error) {
+            console.error("Error exporting events:", error);
+        }
     };
 
     if (loading) return <p>Loading...</p>;

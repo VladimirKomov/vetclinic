@@ -25,3 +25,12 @@ export const addAnimalEventApi = async (id, event) => {
     const response = await axios.post(`${API_BASE_URL}/${id}/events`, event);
     return response.data;
 };
+
+// export events for a specific animal as an Excel file
+export const exportAnimalEventsApi = async (id) => {
+    const response = await axios.get(`${API_BASE_URL}/${id}/export`, {
+        // it is binary file
+        responseType: "blob",
+    });
+    return response.data;
+};
