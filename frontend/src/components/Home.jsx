@@ -1,69 +1,51 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAnimals, addAnimal } from "../redux/animalsSlice";
+import AnimalCard from "../components/AnimalCard";
+import AddAnimalModal from "../components/AddAnimalModal";
+import styles from "./Home.module.css";
 
 const Home = () => {
     const dispatch = useDispatch();
     const { animals, loading, error } = useSelector((state) => state.animals);
 
-    const [form, setForm] = useState({
-        name: "",
-        species: "",
-        birth_date: "",
-    });
+    const [isModalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
         dispatch(fetchAnimals());
     }, [dispatch]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        dispatch(addAnimal(form));
-        setForm({ name: "", species: "", birth_date: "" });
+    const handleAddAnimal = (formData) => {
+        dispatch(addAnimal(formData));
     };
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
     return (
-        <div>
-            <h1>Animals</h1>
-            <ul>
-                {animals.map((animal) => (
-                    <li key={animal.id}>
-                        {animal.name} - {animal.species} - {calculateAge(animal.birth_date)}
-                    </li>
-                ))}
-            </ul>
+        <div className={styles.container}>
+            <h1 className={styles.title}>Animal List</h1>
 
-            <h2>Add a New Animal</h2>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Name:
-                    <input
-                        type="text"
-                        value={form.name}
-                        onChange={(e) => setForm({ ...form, name: e.target.value })}
+            <button onClick={() => setModalOpen(true)} className={styles.addButton}>
+                Add Animal
+            </button>
+
+            <div className={styles.animalList}>
+                {animals.map((animal) => (
+                    <AnimalCard
+                        key={animal.id}
+                        name={animal.name}
+                        species={animal.species}
+                        age={calculateAge(animal.birth_date)}
                     />
-                </label>
-                <label>
-                    Species:
-                    <input
-                        type="text"
-                        value={form.species}
-                        onChange={(e) => setForm({ ...form, species: e.target.value })}
-                    />
-                </label>
-                <label>
-                    Birth Date:
-                    <input
-                        type="date"
-                        value={form.birth_date}
-                        onChange={(e) => setForm({ ...form, birth_date: e.target.value })}
-                    />
-                </label>
-                <button type="submit">Add Animal</button>
-            </form>
+                ))}
+            </div>
+
+            <AddAnimalModal
+                isOpen={isModalOpen}
+                onClose={() => setModalOpen(false)}
+                onAddAnimal={handleAddAnimal}
+            />
         </div>
     );
 };

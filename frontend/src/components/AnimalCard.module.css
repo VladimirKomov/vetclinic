@@ -1,0 +1,45 @@
+.card {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    width: 100%;
+    max-width: 300px;
+    margin: 10px auto;
+    padding: 15px;
+    font-family: Arial, sans-serif;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.header {
+    padding: 10px;
+    border-radius: 8px 8px 0 0;
+    text-align: center;
+}
+
+.name {
+    font-size: 1.2em;
+    margin: 0;
+    text-transform: capitalize;
+}
+
+.content {
+    padding: 10px 0;
+}
+
+.species,
+.age {
+    color: #555;
+    margin: 5px 0;
+}
+
+.species strong,
+.age strong {
+    color: #333;
+}

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "/api/animals";
+const API_BASE_URL = "http://localhost:5000/animals";
 
 // get a list if animals
 export const fetchAnimalsApi = async () => {
