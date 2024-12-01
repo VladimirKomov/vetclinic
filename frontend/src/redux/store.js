@@ -1,11 +1,13 @@
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
-import { combineReducers } from 'redux';
+import { configureStore } from "@reduxjs/toolkit";
+import animalsReducer from "./animalsSlice";
+import eventsReducer from "./eventsSlice";
 
-const rootReducer = combineReducers({
-
+const store = configureStore({
+    reducer: {
+        animals: animalsReducer,
+        events: eventsReducer,
+    },
 });
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
-
 export default store;
+
